@@ -46,14 +46,14 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/cantaloupe-project/cantaloupe</connection>
-        <developerConnection>scm:git:git@github.com:cantaloupe-project/cantaloupe</developerConnection>
+        <connection>scm:git:git://github.com/ReadcoopSCE/cantaloupe</connection>
+        <developerConnection>scm:git:git@github.com:ReadcoopSCE/cantaloupe</developerConnection>
         <tag>HEAD</tag>
-        <url>https://github.com/cantaloupe-project/cantaloupe</url>
+        <url>https://github.com/ReadcoopSCE/cantaloupe</url>
     </scm>
     <issueManagement>
         <system>GitHub Issues</system>
-        <url>https://github.com/cantaloupe-project/cantaloupe/issues</url>
+        <url>https://github.com/ReadcoopSCE/cantaloupe/issues</url>
     </issueManagement>
 
     <dependencies>
