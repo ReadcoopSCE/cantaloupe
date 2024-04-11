@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import edu.illinois.library.cantaloupe.Application;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -14,6 +16,8 @@ import java.io.UncheckedIOException;
  * @since 5.0
  */
 final class InfoSerializer extends JsonSerializer<Info> {
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(InfoSerializer.class);
 
     static final String APPLICATION_VERSION_KEY   = "applicationVersion";
     static final String IDENTIFIER_KEY            = "identifier";
@@ -53,7 +57,13 @@ final class InfoSerializer extends JsonSerializer<Info> {
         });
         generator.writeEndArray();
         // metadata
-        generator.writeObjectField(METADATA_KEY, info.getMetadata());
+        try {
+            generator.writeObjectField(METADATA_KEY, info.getMetadata());
+        } catch (IOException e) {
+            if (e.getMessage().contains("rdf:RDF is not allowed as an element tag here")) {
+                LOGGER.warn("Ignoring RDF metadata because Jena Riot can't handle it in certain situations");
+            }
+        }
         generator.writeEndObject();
     }
 
