@@ -124,11 +124,14 @@ public final class Reader implements AutoCloseable {
                 // Is the tag value a pointer to a sub-IFD?
                 final TagSet subIFDTagSet = TagSet.forIFDPointerTag(tagNum);
                 if (subIFDTagSet != null && tagNum != 0) {
+                    // N.B.: getStreamPosition() is absolute, whereas seek()
+                    // is relative to the TIFF signature, so the position is
+                    // restored directly rather than via seek().
                     final long pos = inputStream.getStreamPosition();
                     seek(valueOrOffset);
                     Directory subDir = read(subIFDTagSet);
                     dir.put(tag, DataType.SLONG, subDir);
-                    seek(pos);
+                    inputStream.seek(pos);
                 } else {
                     final DataType format = DataType.forValue(dataFormat);
                     final int valueLength = format.getNumBytesPerComponent() *

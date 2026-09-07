@@ -6,26 +6,20 @@ import edu.illinois.library.cantaloupe.image.exif.Rational;
 import edu.illinois.library.cantaloupe.image.exif.Tag;
 import edu.illinois.library.cantaloupe.image.exif.TagSet;
 import edu.illinois.library.cantaloupe.image.iptc.DataSet;
-import edu.illinois.library.cantaloupe.image.xmp.Utils;
 import edu.illinois.library.cantaloupe.processor.codec.ImageReader;
 import edu.illinois.library.cantaloupe.processor.codec.ImageReaderFactory;
 import edu.illinois.library.cantaloupe.test.BaseTest;
 import edu.illinois.library.cantaloupe.test.TestUtil;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RDFFormat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.FileVisitOption;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -244,6 +238,19 @@ public class MetadataTest extends BaseTest {
         try {
             Metadata metadata = reader.getMetadata(0);
             assertEquals(Orientation.ROTATE_0, metadata.getOrientation());
+        } finally {
+            reader.dispose();
+        }
+    }
+
+    @Test
+    void testGetOrientationFromDefectEXIFData() throws Exception {
+        Path fixture = TestUtil.getImage("jpg-exif-bad-marker.jpg");
+        ImageReader reader = new ImageReaderFactory()
+                .newImageReader(Format.get("jpg"), fixture);
+        try {
+            Metadata metadata = reader.getMetadata(0);
+            assertEquals(Orientation.ROTATE_90, metadata.getOrientation());
         } finally {
             reader.dispose();
         }
